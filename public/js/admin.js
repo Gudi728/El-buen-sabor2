@@ -317,13 +317,28 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionStorage.setItem(TOKEN_KEY, adminToken);
   }
 
-  async function toDataUrl(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(String(reader.result || ''));
-      reader.onerror = () => reject(new Error('No se pudo leer el archivo'));
-      reader.readAsDataURL(file);
-    });
+  async function prepareImageForUpload(file) {
+    const sourceUrl = URL.createObjectURL(file);
+
+    try {
+      const image = await new Promise((resolve, reject) => {
+        const preview = new Image();
+        preview.onload = () => resolve(preview);
+        preview.onerror = () => reject(new Error('No se pudo procesar la imagen seleccionada.'));
+        preview.src = sourceUrl;
+      });
+      const maxDimension = 1920;
+      const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement('canvas');
+
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      return canvas.toDataURL('image/jpeg', 0.85);
+    } finally {
+      URL.revokeObjectURL(sourceUrl);
+    }
   }
 
   async function uploadImage(fileInput, folder) {
@@ -332,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
       throw new Error('Selecciona una imagen para subir');
     }
 
-    const dataUrl = await toDataUrl(file);
+    const dataUrl = await prepareImageForUpload(file);
     const uploaded = await apiFetch('/api/admin/uploads/imagen', {
       method: 'POST',
       body: JSON.stringify({
