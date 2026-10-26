@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const categoryNameInput = document.getElementById('category-name');
   const categoryImageInput = document.getElementById('category-image');
   const categoryImageFileInput = document.getElementById('category-image-file');
-  const uploadCategoryImageBtn = document.getElementById('upload-category-image-btn');
   const categoryActiveInput = document.getElementById('category-active');
   const categorySubmitBtn = document.getElementById('category-submit-btn');
   const categoryCancelBtn = document.getElementById('category-cancel-btn');
@@ -39,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const productIngredientsInput = document.getElementById('product-ingredients');
   const productImageInput = document.getElementById('product-image');
   const productImageFileInput = document.getElementById('product-image-file');
-  const uploadProductImageBtn = document.getElementById('upload-product-image-btn');
   const productAvailableInput = document.getElementById('product-available');
   const productFeaturedInput = document.getElementById('product-featured');
   const productSoldCountInput = document.getElementById('product-sold-count');
@@ -382,34 +380,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loginError.classList.remove('d-none');
   }));
 
-  uploadCategoryImageBtn.addEventListener('click', runAsync(async () => {
-    uploadCategoryImageBtn.disabled = true;
-    try {
-      const url = await uploadImage(categoryImageFileInput, 'categorias');
-      categoryImageInput.value = url;
-      showToast('Imagen de categoria subida.');
-    } finally {
-      uploadCategoryImageBtn.disabled = false;
-    }
-  }, (error) => {
-    showToast(error.message || 'No se pudo subir la imagen.');
-  }));
-
-  uploadProductImageBtn.addEventListener('click', runAsync(async () => {
-    uploadProductImageBtn.disabled = true;
-    try {
-      const url = await uploadImage(productImageFileInput, 'productos');
-      productImageInput.value = url;
-      showToast('Imagen de producto subida.');
-    } finally {
-      uploadProductImageBtn.disabled = false;
-    }
-  }, (error) => {
-    showToast(error.message || 'No se pudo subir la imagen.');
-  }));
-
   categoryForm.addEventListener('submit', runAsync(async (event) => {
     event.preventDefault();
+
+    if (categoryImageFileInput.files && categoryImageFileInput.files[0]) {
+      categoryImageInput.value = await uploadImage(categoryImageFileInput, 'categorias');
+    }
 
     const payload = {
       name: sanitizeText(categoryNameInput.value, 80),
@@ -509,6 +485,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   productForm.addEventListener('submit', runAsync(async (event) => {
     event.preventDefault();
+
+    if (productImageFileInput.files && productImageFileInput.files[0]) {
+      productImageInput.value = await uploadImage(productImageFileInput, 'productos');
+    }
 
     const payload = {
       name: sanitizeText(productNameInput.value, 120),
