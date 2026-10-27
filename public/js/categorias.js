@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalTitle = document.getElementById('product-modal-title');
   const modalDescription = document.getElementById('product-modal-description');
   const modalExtra = document.getElementById('product-modal-extra');
+  const floatingCartButton = document.getElementById('floating-cart-button');
+  const floatingCartCount = document.getElementById('floating-cart-count');
 
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   const categorySlug = pathParts[0] === 'categoria' && pathParts[1] ? pathParts[1] : null;
@@ -83,6 +85,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function saveCart(cart) {
     setStoredArray(CART_STORAGE_KEY, cart);
+    updateFloatingCart(cart);
+  }
+
+  function updateFloatingCart(cart = getCart()) {
+    if (!floatingCartButton || !floatingCartCount) return;
+
+    const quantity = cart.reduce((total, item) => total + (Number(item.quantity) || 0), 0);
+    floatingCartButton.classList.toggle('d-none', quantity === 0);
+    floatingCartCount.textContent = String(quantity);
   }
 
   function addToCart({ product, note }) {
@@ -359,6 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function bootstrapMenu() {
     try {
+      updateFloatingCart();
       setupListeners();
       if (categorySlug) {
         await loadCategoryDetail(categorySlug);
