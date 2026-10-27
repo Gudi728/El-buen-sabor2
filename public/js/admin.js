@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
         preview.onerror = () => reject(new Error('No se pudo procesar la imagen seleccionada.'));
         preview.src = sourceUrl;
       });
-      const maxDimension = 1920;
+      const maxDimension = 1280;
       const scale = Math.min(1, maxDimension / Math.max(image.naturalWidth, image.naturalHeight));
       const canvas = document.createElement('canvas');
 
@@ -333,7 +333,14 @@ document.addEventListener('DOMContentLoaded', () => {
       canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
       canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
 
-      return canvas.toDataURL('image/jpeg', 0.85);
+      for (const quality of [0.75, 0.6, 0.45]) {
+        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+        if (dataUrl.length <= 5_500_000) {
+          return dataUrl;
+        }
+      }
+
+      throw new Error('La foto es demasiado grande. Elige otra imagen o recortala antes de subirla.');
     } finally {
       URL.revokeObjectURL(sourceUrl);
     }
