@@ -49,19 +49,21 @@ async function uploadImageFromDataUrl({ dataUrl, folder }) {
   const safeFolder = ALLOWED_FOLDERS.has(requestedFolder) ? requestedFolder : 'general';
   const path = `${safeFolder}/${fileName}`;
   const file = bucket.file(path);
+  const downloadToken = crypto.randomUUID();
 
   await file.save(parsed.data, {
     metadata: {
-      contentType: parsed.mimeType
+      contentType: parsed.mimeType,
+      metadata: {
+        firebaseStorageDownloadTokens: downloadToken
+      }
     },
     resumable: false
   });
 
-  await file.makePublic();
-
   return {
     path,
-    url: `https://storage.googleapis.com/${bucket.name}/${path}`
+    url: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(path)}?alt=media&token=${downloadToken}`
   };
 }
 
