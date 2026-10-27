@@ -71,7 +71,12 @@ async function login(req, res) {
     });
   }
 
-  await firebaseUserService.syncAdminUser(username);
+  try {
+    await firebaseUserService.syncAdminUser(username);
+  } catch (error) {
+    // Firebase authentication is not required for the panel's own session.
+    console.error('No se pudo sincronizar el usuario administrador con Firebase:', error.message);
+  }
 
   return res.status(200).json({
     ok: true,
