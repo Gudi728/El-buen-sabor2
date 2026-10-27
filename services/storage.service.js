@@ -20,6 +20,9 @@ function configureCloudinary() {
   if (!cloudName || !apiKey || !apiSecret) {
     throw new Error('Cloudinary no configurado');
   }
+  if (!/^[a-z0-9-]+$/i.test(cloudName) || cloudName.toLowerCase() === 'root') {
+    throw new Error('CLOUDINARY_CLOUD_NAME invalido. Copia el Cloud name del Dashboard de Cloudinary.');
+  }
 
   cloudinary.config({
     cloud_name: cloudName,
