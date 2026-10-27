@@ -13,6 +13,11 @@ const env = {
       : '',
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET || ''
   },
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || '',
+    apiKey: process.env.CLOUDINARY_API_KEY || '',
+    apiSecret: process.env.CLOUDINARY_API_SECRET || ''
+  },
   publicFirebase: {
     apiKey: process.env.PUBLIC_FIREBASE_API_KEY || '',
     authDomain: process.env.PUBLIC_FIREBASE_AUTH_DOMAIN || '',

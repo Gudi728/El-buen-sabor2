@@ -17,6 +17,12 @@ services:
         sync: false
       - key: FIREBASE_STORAGE_BUCKET
         sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
       - key: PUBLIC_FIREBASE_API_KEY
         sync: false
       - key: PUBLIC_FIREBASE_AUTH_DOMAIN

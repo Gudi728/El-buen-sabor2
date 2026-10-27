@@ -13,7 +13,7 @@ Si queres que funcione todo (home, categoria, carrito, admin y APIs), desplegalo
 - Frontend: HTML5, CSS3, JavaScript ES6+, Bootstrap 5, Font Awesome, Google Fonts
 - Backend: Node.js, Express.js
 - Base de datos: Firebase Firestore
-- Imagenes: Firebase Storage
+- Imagenes: Cloudinary
 
 ## Estructura
 
@@ -45,7 +45,7 @@ Si queres que funcione todo (home, categoria, carrito, admin y APIs), desplegalo
 
    Copy-Item .env.example .env
 
-3. Completar variables Firebase en .env
+3. Completar variables Firebase y Cloudinary en .env
 
 4. Iniciar:
 
@@ -75,6 +75,9 @@ Variables requeridas:
 - FIREBASE_CLIENT_EMAIL
 - FIREBASE_PRIVATE_KEY
 - FIREBASE_STORAGE_BUCKET
+- CLOUDINARY_CLOUD_NAME
+- CLOUDINARY_API_KEY
+- CLOUDINARY_API_SECRET
 - PUBLIC_FIREBASE_API_KEY
 - PUBLIC_FIREBASE_AUTH_DOMAIN
 - PUBLIC_FIREBASE_PROJECT_ID
