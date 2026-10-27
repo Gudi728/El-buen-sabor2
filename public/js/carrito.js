@@ -261,12 +261,14 @@ document.addEventListener('DOMContentLoaded', () => {
     lines.push('');
     lines.push('*Productos*');
 
-    orderData.cart.forEach((item, index) => {
+    orderData.cart.forEach((item) => {
       const itemSubtotal = item.price * item.quantity;
       lines.push(
-        `${index + 1}. ${item.name} x${item.quantity} - ${money.format(item.price)} c/u - Subtotal ${money.format(itemSubtotal)}`
+        `• ${item.name} x${item.quantity} - ${money.format(item.price)} c/u - Subtotal ${money.format(itemSubtotal)}`
       );
-      lines.push(`   ${formatNote(item.note)}`);
+      if (item.note) {
+        lines.push(`  Observaciones: ${item.note}`);
+      }
     });
 
     lines.push('');
@@ -280,7 +282,9 @@ document.addEventListener('DOMContentLoaded', () => {
       lines.push(`Referencia: ${orderData.reference}`);
     }
 
-    lines.push(`Observaciones generales: ${orderData.generalNotes || 'Sin observaciones generales'}`);
+    if (orderData.generalNotes) {
+      lines.push(`Observaciones generales: ${orderData.generalNotes}`);
+    }
     return lines.join('\n');
   }
 
