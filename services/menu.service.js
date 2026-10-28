@@ -413,10 +413,18 @@ function isOpenNow(horario) {
     return false;
   }
 
-  const now = new Date();
-  const dayKey = DAY_KEYS[now.getDay()];
-  const prevDayKey = DAY_KEYS[(now.getDay() + 6) % 7];
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Argentina/Cordoba',
+    weekday: 'long',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  const dayIndex = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].indexOf(values.weekday);
+  const dayKey = DAY_KEYS[dayIndex];
+  const prevDayKey = DAY_KEYS[(dayIndex + 6) % 7];
+  const nowMinutes = Number(values.hour) * 60 + Number(values.minute);
 
   const openMinutes = toMinutes(horario.apertura);
   const closeMinutes = toMinutes(horario.cierre);
